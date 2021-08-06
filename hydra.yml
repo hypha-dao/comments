@@ -1,0 +1,6 @@
+contracts:
+  comments:
+    abi: build/comments/comments.abi
+    name: comments
+    wasm: build/comments/comments.wasm
+options: null
