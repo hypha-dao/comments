@@ -2,7 +2,7 @@
 #include <eosio/system.hpp>
 
 namespace hypha {
-    const uint64_t NULL_PARENT = std::numeric_limits<uint64_t>::max();
+    const uint64_t NULL_PARENT = 0;
 
     namespace Status {
         constexpr name Active = name("active");
@@ -66,6 +66,9 @@ namespace hypha {
         uint32_t now = eosio::current_time_point().sec_since_epoch();
         comments.emplace(scope, [&](auto &c) {
             c.id = comments.available_primary_key();
+            if (c.id == NULL_PARENT) {
+                c.id++;
+            }
             c.parent_id = parent;
             c.section = section;
             c.author = author;
