@@ -2,12 +2,16 @@
 
 #include <eosio/eosio.hpp>
 
+#include <vector>
+#include <map>
 #include <string>
 
 namespace hypha {
 
     using std::uint64_t;
     using std::string;
+    using std::map;
+    using std::vector;
     using eosio::name;
 
     class [[eosio::contract("comments.hypha")]] comments : public eosio::contract {
@@ -26,6 +30,20 @@ namespace hypha {
             void delsection(
                 const name& scope,
                 const name& section
+            );
+
+            [[eosio::action]]
+            void likesec(
+                const name& scope,
+                const name& section,
+                const name& user
+            );
+
+            [[eosio::action]]
+            void unlikesec(
+                const name& scope,
+                const name& section,
+                const name& user
             );
 
             [[eosio::action]]
@@ -58,6 +76,8 @@ namespace hypha {
 
                 name author;
                 uint64_t comments;
+                vector<name> likes;
+                map<name, bool> config; // future, allow to enable/disable 
 
                 uint32_t created;
                 uint32_t updated;

@@ -76,6 +76,29 @@ describe('comments', () => {
     ])).rejects.toThrowError(/Section already exists/i);
   });
 
+  it('Can remove a section', async () => {
+    await comments.contract.addsection({
+      scope: dao.accountName,
+      section: 'my.section',
+      author: 'user1',
+    }, [
+      {
+        actor: dao.accountName, 
+        permission: 'active'
+      }
+    ]);
+
+    await comments.contract.delsection({
+      scope: dao.accountName,
+      section: 'my.section'
+    }, [
+      {
+        actor: dao.accountName, 
+        permission: 'active'
+      }
+    ]);
+  });
+
   it('Can add comments', async () => {
     await comments.contract.addsection({
       scope: dao.accountName,

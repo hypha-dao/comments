@@ -43,6 +43,34 @@ namespace hypha {
         section_index.erase(sectionItr);
     }
 
+    void comments::likesec(const name& scope, const name& section, const name& user) {
+        require_auth(user);
+        Sections section_index(get_self(), scope.value);
+        auto sectionItr = section_index.require_find(section.value, "Section does not exist");
+
+        auto it = std::find(sectionItr->likes.begin(), sectionItr->likes.end(), user);
+        eosio::check(it == sectionItr->likes.end(), "Already liked the section");
+
+        section_index.modify(sectionItr, scope, [&](auto &s) {
+            s.likes.push_back(user);
+        });
+    }
+
+    void comments::unlikesec(const name& scope, const name& section, const name& user) {
+        require_auth(user);
+        Sections section_index(get_self(), scope.value);
+        auto sectionItr = section_index.require_find(section.value, "Section does not exist");
+
+        auto it = std::find(sectionItr->likes.begin(), sectionItr->likes.end(), user);
+        eosio::check(it != sectionItr->likes.end(), "User has not liked the section");
+
+        section_index.modify(sectionItr, scope, [&](auto &s) {
+            s.likes.erase(
+                std::find(s.likes.begin(), s.likes.end(), user)
+            );
+        });
+    }
+
     void comments::addcomment(
         const name& scope,
         const name& section,
@@ -50,7 +78,7 @@ namespace hypha {
         const string& content, 
         const std::optional<std::uint64_t>& parent_id
     ) {
-        require_auth(scope);
+        require_auth(author);
 
         Sections section_index(get_self(), scope.value);
         auto sectionItr = section_index.require_find(section.value, "Section does not exist");
@@ -86,7 +114,7 @@ namespace hypha {
         const uint64_t& comment_id,
         const string& content
     ) {
-        require_auth(scope);
+        require_auth(author);
         Comments comments(get_self(), scope.value);
         auto commentItr = comments.require_find(comment_id);
 
@@ -105,7 +133,7 @@ namespace hypha {
         const name& author,
         const uint64_t& comment_id
     ) {
-        require_auth(scope);
+        require_auth(author);
         Comments comments(get_self(), scope.value);
         auto commentItr = comments.require_find(comment_id);
 
