@@ -12,7 +12,7 @@ function call_curl {
 
 echo "Testing if ${USER} is collaborator of this repository"
 
-IS_COLLABORATOR="https://api.github.com/repos/hypha-dao/dao-contracts/collaborators/${USER}"
+IS_COLLABORATOR="https://api.github.com/repos/hypha-dao/comments/collaborators/${USER}"
 RESPONSE=`call_curl "${IS_COLLABORATOR}"`
 
 if [ "$RESPONSE" = "204" ]; then
