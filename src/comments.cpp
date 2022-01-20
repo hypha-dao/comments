@@ -25,6 +25,7 @@ namespace hypha {
         uint32_t now = eosio::current_time_point().sec_since_epoch();
         eosio::check(section_index.find(Section::build_key(tenant, section)) == section_index.end(), "Section already exists");
         section_table.emplace(scope, [&](auto &s) {
+            s.id = section_table.available_primary_key();
             s.section = section;
             s.author = author;
             s.tenant = tenant;
