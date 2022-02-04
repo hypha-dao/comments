@@ -23,7 +23,7 @@ namespace hypha {
         auto section_index = section_table.get_index<"bykey"_n>();
 
         uint32_t now = eosio::current_time_point().sec_since_epoch();
-        eosio::check(section_index.find(Section::build_key(tenant, section)) == section_index.end(), "Section already exists");
+        eosio::check(section_index.find(Section::build_key(tenant, section)) == section_index.end(), "Section already exists" + section.to_string());
         section_table.emplace(scope, [&](auto &s) {
             s.id = section_table.available_primary_key();
             s.section = section;
